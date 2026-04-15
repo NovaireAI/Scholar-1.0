@@ -45,9 +45,10 @@
       box-shadow: 0 25px 45px -12px rgba(0,20,30,0.25), inset 0 1px 2px rgba(255,255,255,0.2);
       border: 1px solid rgba(210, 235, 245, 0.18);
       overflow: hidden;
+      transition: all 0.3s ease;
     }
 
-    /* Auth View */
+    /* ---------- AUTH VIEW ---------- */
     .auth-wrapper {
       display: flex; align-items: center; justify-content: center;
       height: 100%; width: 100%;
@@ -97,9 +98,356 @@
     .google-btn { background: rgba(255,255,255,0.1); display: flex; gap: 12px; justify-content: center; }
     .error-message { color: #f4b8b8; text-align: center; margin-top: 12px; }
 
-    /* Main App (hidden initially) */
-    .main-app { display: none; height: 100%; width: 100%; flex-direction: row; }
-    /* ... (full chat UI styles as before, omitted for brevity but included in final answer) ... */
+    #googleButtonContainer {
+      display: flex;
+      justify-content: center;
+      margin-top: 8px;
+    }
+
+    /* ---------- MAIN APP (hidden initially) ---------- */
+    .main-app {
+      display: none;
+      height: 100%;
+      width: 100%;
+      flex-direction: row;
+    }
+
+    /* ---------- SIDEBAR ---------- */
+    .sidebar {
+      width: 280px;
+      background: rgba(18, 40, 50, 0.28);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-right: 1px solid rgba(200, 225, 235, 0.1);
+      display: flex;
+      flex-direction: column;
+      padding: 24px 16px 20px 16px;
+      transition: width 0.35s ease, padding 0.3s ease, opacity 0.25s;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .sidebar.collapsed {
+      width: 0;
+      padding-left: 0;
+      padding-right: 0;
+      border-right: none;
+      opacity: 0;
+    }
+    .sidebar-content {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-width: 240px;
+    }
+    .conv-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding: 0 4px;
+    }
+    .conv-header h3 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 400;
+      color: #eef7fc;
+      font-size: 1.3rem;
+      opacity: 0.9;
+    }
+    .new-chat-btn {
+      background: rgba(220, 240, 250, 0.12);
+      border: 0.5px solid rgba(255,255,255,0.15);
+      color: #deecf2;
+      width: 32px; height: 32px;
+      border-radius: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .new-chat-btn:hover {
+      background: rgba(190, 225, 240, 0.25);
+      color: white;
+    }
+    .conversation-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-right: 4px;
+    }
+    .conv-item {
+      padding: 12px 14px;
+      border-radius: 18px;
+      background: rgba(220, 240, 250, 0.05);
+      backdrop-filter: blur(4px);
+      border: 0.5px solid rgba(210, 235, 245, 0.08);
+      color: #e0eef5;
+      font-size: 0.95rem;
+      font-weight: 400;
+      transition: all 0.2s;
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .conv-item i {
+      margin-right: 12px;
+      opacity: 0.7;
+      font-size: 0.9rem;
+      color: #b3d9e8;
+    }
+    .conv-item:hover {
+      background: rgba(200, 230, 245, 0.18);
+      border-color: rgba(255,255,255,0.2);
+    }
+    .conv-item.active {
+      background: rgba(140, 200, 220, 0.22);
+      border-left: 3px solid #aad0df;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.1);
+    }
+    .user-panel {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 0.5px solid rgba(210, 235, 245, 0.15);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .avatar {
+      width: 42px; height: 42px;
+      background: linear-gradient(135deg, #9fcad4, #3a6677);
+      border-radius: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 400;
+      font-size: 1.1rem;
+      box-shadow: 0 6px 12px -4px rgba(0,20,30,0.2);
+      border: 1px solid rgba(255,255,255,0.2);
+      text-transform: uppercase;
+    }
+    .user-info { flex: 1; }
+    .user-name {
+      color: #ecf6fb;
+      font-weight: 450;
+      letter-spacing: -0.01em;
+    }
+    .user-settings {
+      color: #b8d8e6;
+      font-size: 1.2rem;
+      cursor: pointer;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+    .user-settings:hover { opacity: 1; }
+
+    /* ---------- MAIN CHAT AREA ---------- */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      background: transparent;
+    }
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 28px 10px 28px;
+    }
+    .brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      color: rgba(235, 250, 255, 0.55);
+      text-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .menu-toggle {
+      background: rgba(220, 240, 250, 0.12);
+      backdrop-filter: blur(8px);
+      border: 0.5px solid rgba(255,255,255,0.15);
+      color: #d2e9f2;
+      width: 44px; height: 44px;
+      border-radius: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .menu-toggle:hover {
+      background: rgba(190, 225, 245, 0.3);
+      color: white;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 24px 24px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      scroll-behavior: smooth;
+    }
+
+    .message {
+      display: flex;
+      max-width: 75%;
+      animation: fadeSlide 0.3s ease-out;
+    }
+    .message.user { align-self: flex-end; }
+    .message.assistant { align-self: flex-start; }
+    .bubble {
+      padding: 14px 20px;
+      border-radius: 26px;
+      background: rgba(245, 255, 255, 0.12);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 0.5px solid rgba(230, 250, 255, 0.2);
+      box-shadow: 0 8px 18px -8px rgba(0,30,40,0.2);
+      color: #1e2f38;
+      font-weight: 400;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+    .user .bubble {
+      background: rgba(50, 90, 110, 0.35);
+      border: 0.5px solid rgba(180, 220, 240, 0.3);
+      color: #ecf6fc;
+      border-bottom-right-radius: 8px;
+    }
+    .assistant .bubble {
+      background: rgba(235, 250, 255, 0.2);
+      border: 0.5px solid rgba(210, 240, 255, 0.25);
+      color: #1a2c35;
+      border-bottom-left-radius: 8px;
+    }
+
+    @keyframes fadeSlide {
+      0% { opacity: 0; transform: translateY(8px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .input-container {
+      padding: 16px 28px 28px 28px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .input-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      background: rgba(230, 248, 255, 0.18);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 60px;
+      padding: 6px 8px 6px 22px;
+      border: 0.5px solid rgba(210, 240, 255, 0.3);
+      box-shadow: 0 8px 18px -8px rgba(0,20,30,0.15), inset 0 1px 2px rgba(255,255,255,0.3);
+    }
+    .input-wrapper input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      padding: 14px 0;
+      font-size: 1rem;
+      color: #1e323e;
+      font-weight: 400;
+    }
+    .input-wrapper input::placeholder {
+      color: #3d5b68;
+      opacity: 0.7;
+      font-style: italic;
+    }
+    .send-btn {
+      background: rgba(90, 150, 170, 0.45);
+      backdrop-filter: blur(8px);
+      border: 0.5px solid rgba(255,255,255,0.2);
+      color: #e1f2fa;
+      width: 48px; height: 48px;
+      border-radius: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 1.2rem;
+      margin-left: 4px;
+    }
+    .send-btn:hover {
+      background: #5f9eb0;
+      color: white;
+    }
+
+    .model-selector { position: relative; }
+    .model-btn {
+      background: rgba(200, 230, 240, 0.18);
+      backdrop-filter: blur(12px);
+      border: 0.5px solid rgba(200, 230, 245, 0.25);
+      color: #1e3745;
+      padding: 10px 16px;
+      border-radius: 40px;
+      font-size: 0.9rem;
+      font-weight: 450;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .model-btn i { font-size: 0.8rem; opacity: 0.8; }
+    .model-btn:hover { background: rgba(180, 220, 235, 0.35); }
+    .model-dropdown {
+      position: absolute;
+      bottom: 58px;
+      right: 0;
+      background: rgba(20, 45, 55, 0.7);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border-radius: 24px;
+      padding: 8px 0;
+      min-width: 180px;
+      border: 0.5px solid rgba(200, 230, 245, 0.25);
+      box-shadow: 0 20px 30px -8px rgba(0,0,0,0.2);
+      display: none;
+      z-index: 100;
+    }
+    .model-dropdown.show { display: block; }
+    .model-option {
+      padding: 12px 20px;
+      color: #d5ecf5;
+      cursor: pointer;
+      font-weight: 400;
+      transition: background 0.15s;
+    }
+    .model-option:hover { background: rgba(150, 200, 220, 0.25); }
+    .model-option.active-model {
+      background: rgba(110, 180, 200, 0.3);
+      border-left: 3px solid #b3dfec;
+    }
+
+    /* Scrollbar */
+    .chat-messages::-webkit-scrollbar,
+    .conversation-list::-webkit-scrollbar { width: 4px; }
+    .chat-messages::-webkit-scrollbar-track { background: transparent; }
+    .chat-messages::-webkit-scrollbar-thumb {
+      background: rgba(140, 180, 190, 0.3);
+      border-radius: 20px;
+    }
+
+    @media (max-width: 700px) {
+      .app-container { height: 96vh; border-radius: 24px; }
+      .sidebar { position: absolute; left: 0; top: 0; bottom: 0; z-index: 30; border-radius: 24px 0 0 24px; }
+      .sidebar.collapsed { width: 0; padding: 0; }
+      .brand { font-size: 1.5rem; }
+    }
   </style>
 </head>
 <body>
@@ -134,192 +482,321 @@
   </div>
 
   <!-- MAIN APP VIEW (Chat UI) -->
-  <div id="mainAppView" class="main-app">
-    <!-- Full chat interface will be dynamically inserted by initChatUI() -->
-  </div>
+  <div id="mainAppView" class="main-app"></div>
 </div>
 
 <script>
-  // ---------- CONFIGURATION (UPDATE THESE) ----------
-  const API_BASE = 'https://novaireai.pythonanywhere.com';   // Your Flask backend
-  const GOOGLE_CLIENT_ID = '770564713389-6m7oosnmcpo80g0jf5bghh92ninfuofc.apps.googleusercontent.com'; // Replace!
+  (function(){
+    "use strict";
 
-  // ---------- GLOBAL STATE ----------
-  let authToken = localStorage.getItem('novaire_token') || null;
-  let currentUser = null;
-  let currentModel = { name: 'Novaire Core', id: 'core' };
-  const MODELS = [
-    { name: 'Novaire Core', id: 'core' },
-    { name: 'Novaire Code', id: 'code' },
-    { name: 'Novaire Vision', id: 'vision' }
-  ];
+    // ---------- CONFIGURATION (UPDATE THESE) ----------
+    const API_BASE = 'https://novaireai.pythonanywhere.com';
+    const GOOGLE_CLIENT_ID = '770564713389-6m7oosnmcpo80g0jf5bghh92ninfuofc.apps.googleusercontent.com';
 
-  const authView = document.getElementById('authView');
-  const mainAppView = document.getElementById('mainAppView');
-  const authForm = document.getElementById('authForm');
-  const authSubmitBtn = document.getElementById('authSubmitBtn');
-  const emailInput = document.getElementById('email');
-  const passwordInput = document.getElementById('password');
-  const signupNameGroup = document.getElementById('signupNameGroup');
-  const signupNameInput = document.getElementById('signupName');
-  const authError = document.getElementById('authError');
-  let currentMode = 'login';
+    // ---------- GLOBAL STATE ----------
+    let authToken = localStorage.getItem('novaire_token') || null;
+    let currentUser = null;
+    let currentModel = { name: 'Novaire Core', id: 'core' };
+    const MODELS = [
+      { name: 'Novaire Core', id: 'core' },
+      { name: 'Novaire Code', id: 'code' },
+      { name: 'Novaire Vision', id: 'vision' }
+    ];
 
-  // ---------- VIEW SWITCHING ----------
-  function showApp() {
-    authView.style.display = 'none';
-    mainAppView.style.display = 'flex';
-    if (!mainAppView.hasChildNodes() || mainAppView.children.length === 0) {
-      initChatUI();
+    const authView = document.getElementById('authView');
+    const mainAppView = document.getElementById('mainAppView');
+    const authForm = document.getElementById('authForm');
+    const authSubmitBtn = document.getElementById('authSubmitBtn');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const signupNameGroup = document.getElementById('signupNameGroup');
+    const signupNameInput = document.getElementById('signupName');
+    const authError = document.getElementById('authError');
+    let currentMode = 'login';
+
+    // ---------- VIEW SWITCHING ----------
+    function showApp() {
+      authView.style.display = 'none';
+      mainAppView.style.display = 'flex';
+      if (!mainAppView.hasChildNodes() || mainAppView.children.length === 0) {
+        initChatUI();
+      }
     }
-  }
 
-  function showAuth() {
-    authView.style.display = 'flex';
-    mainAppView.style.display = 'none';
-    localStorage.removeItem('novaire_token');
-    authToken = null;
-    currentUser = null;
-  }
+    function showAuth() {
+      authView.style.display = 'flex';
+      mainAppView.style.display = 'none';
+      localStorage.removeItem('novaire_token');
+      authToken = null;
+      currentUser = null;
+    }
 
-  // Verify token on load
-  if (authToken) {
-    fetch(API_BASE + '/verify', { headers: { 'Authorization': 'Bearer ' + authToken } })
-      .then(res => res.ok ? res.json() : Promise.reject())
-      .then(data => { currentUser = data.user; showApp(); })
-      .catch(() => showAuth());
-  } else { showAuth(); }
+    // Verify token on load
+    if (authToken) {
+      fetch(API_BASE + '/verify', { headers: { 'Authorization': 'Bearer ' + authToken } })
+        .then(res => res.ok ? res.json() : Promise.reject())
+        .then(data => { currentUser = data.user; showApp(); })
+        .catch(() => showAuth());
+    } else { showAuth(); }
 
-  // ---------- AUTH TABS & FORM ----------
-  document.querySelectorAll('.auth-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      currentMode = tab.dataset.tab;
-      signupNameGroup.style.display = currentMode === 'signup' ? 'block' : 'none';
-      authSubmitBtn.textContent = currentMode === 'signup' ? 'Sign Up' : 'Sign In';
+    // ---------- AUTH TABS & FORM ----------
+    document.querySelectorAll('.auth-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentMode = tab.dataset.tab;
+        signupNameGroup.style.display = currentMode === 'signup' ? 'block' : 'none';
+        authSubmitBtn.textContent = currentMode === 'signup' ? 'Sign Up' : 'Sign In';
+        authError.textContent = '';
+      });
+    });
+
+    authForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
       authError.textContent = '';
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+      if (!email || !password) { authError.textContent = 'Email and password required.'; return; }
+      const endpoint = currentMode === 'login' ? '/login' : '/signup';
+      const payload = { email, password };
+      if (currentMode === 'signup') {
+        const name = signupNameInput.value.trim();
+        if (!name) { authError.textContent = 'Full name required.'; return; }
+        payload.name = name;
+      }
+      try {
+        const res = await fetch(API_BASE + endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Authentication failed');
+        authToken = data.token;
+        currentUser = data.user;
+        localStorage.setItem('novaire_token', authToken);
+        showApp();
+      } catch (err) {
+        authError.textContent = err.message;
+      }
     });
-  });
 
-  authForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    authError.textContent = '';
-    const email = emailInput.value.trim();
-    const password = passwordInput.value;
-    if (!email || !password) { authError.textContent = 'Email and password required.'; return; }
-    const endpoint = currentMode === 'login' ? '/login' : '/signup';
-    const payload = { email, password };
-    if (currentMode === 'signup') {
-      const name = signupNameInput.value.trim();
-      if (!name) { authError.textContent = 'Full name required.'; return; }
-      payload.name = name;
+    // ---------- GOOGLE SIGN-IN (popup mode to avoid COOP) ----------
+    function loadGoogleScript() {
+      const script = document.createElement('script');
+      script.src = 'https://accounts.google.com/gsi/client';
+      script.async = true;
+      script.onload = initGoogleSignIn;
+      document.head.appendChild(script);
     }
-    try {
-      const res = await fetch(API_BASE + endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+
+    function initGoogleSignIn() {
+      google.accounts.id.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        callback: handleGoogleResponse,
+        ux_mode: 'popup',
+        auto_select: false,
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Authentication failed');
-      authToken = data.token;
-      currentUser = data.user;
-      localStorage.setItem('novaire_token', authToken);
-      showApp();
-    } catch (err) {
-      authError.textContent = err.message;
-    }
-  });
-
-  // ---------- GOOGLE SIGN-IN ----------
-  function loadGoogleScript() {
-    const script = document.createElement('script');
-    script.src = 'https://accounts.google.com/gsi/client';
-    script.async = true;
-    script.onload = initGoogleSignIn;
-    document.head.appendChild(script);
-  }
-
-  function initGoogleSignIn() {
-    google.accounts.id.initialize({
-      client_id: GOOGLE_CLIENT_ID,
-      callback: handleGoogleResponse,
-      auto_select: false,
-    });
-    const container = document.getElementById('googleButtonContainer');
-    google.accounts.id.renderButton(container, {
-      theme: 'outline', size: 'large', width: '100%', text: 'continue_with'
-    });
-  }
-
-  window.handleGoogleResponse = async (response) => {
-    try {
-      const res = await fetch(API_BASE + '/google-login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ credential: response.credential })
+      const container = document.getElementById('googleButtonContainer');
+      google.accounts.id.renderButton(container, {
+        theme: 'outline',
+        size: 'large',
+        width: 400,        // numeric, not percentage
+        text: 'continue_with'
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Google login failed');
-      authToken = data.token;
-      currentUser = data.user;
-      localStorage.setItem('novaire_token', authToken);
-      showApp();
-    } catch (err) {
-      authError.textContent = err.message;
     }
-  };
 
-  loadGoogleScript();
+    window.handleGoogleResponse = async (response) => {
+      try {
+        const res = await fetch(API_BASE + '/google-login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ credential: response.credential })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Google login failed');
+        authToken = data.token;
+        currentUser = data.user;
+        localStorage.setItem('novaire_token', authToken);
+        showApp();
+      } catch (err) {
+        authError.textContent = err.message;
+      }
+    };
 
-  // ---------- CHAT UI INITIALIZATION ----------
-  function initChatUI() {
-    // Build the full chat interface: sidebar, message area, input, model selector.
-    // (Full code available in the final answer; due to length, I'll provide it separately if needed.)
-    mainAppView.innerHTML = `
-      <aside class="sidebar" id="sidebar">
-        <div class="sidebar-content">
-          <div class="conv-header">
-            <h3>Conversations</h3>
-            <div class="new-chat-btn" id="newChatBtn"><i class="fas fa-plus"></i></div>
-          </div>
-          <div class="conversation-list" id="conversationList">
-            <div class="conv-item active"><i class="far fa-comment-dots"></i> Brand strategy Q2</div>
-            <div class="conv-item"><i class="far fa-comment"></i> Research synthesis</div>
-          </div>
-          <div class="user-panel">
-            <div class="avatar">${currentUser?.name?.charAt(0) || 'U'}</div>
-            <div class="user-info"><div class="user-name">${currentUser?.name || 'User'}</div></div>
-            <div class="user-settings" onclick="logout()"><i class="fas fa-sign-out-alt"></i></div>
-          </div>
-        </div>
-      </aside>
-      <main class="main">
-        <div class="top-bar">
-          <div class="brand">Novaire AI</div>
-          <div class="menu-toggle" id="sidebarToggle"><i class="fas fa-chevron-left"></i></div>
-        </div>
-        <div class="chat-messages" id="chatMessages">
-          <div class="message assistant"><div class="bubble">Welcome back, ${currentUser?.name || ''}. How may I assist you today?</div></div>
-        </div>
-        <div class="input-container">
-          <div class="input-wrapper">
-            <input type="text" id="messageInput" placeholder="Ask Novaire…" autocomplete="off">
-            <div class="send-btn" id="sendBtn"><i class="fas fa-arrow-up"></i></div>
-          </div>
-          <div class="model-selector" id="modelSelectorWrapper">
-            <div class="model-btn" id="modelBtn"><span id="currentModelLabel">Novaire Core</span><i class="fas fa-chevron-down"></i></div>
-            <div class="model-dropdown" id="modelDropdown"></div>
-          </div>
-        </div>
-      </main>
-    `;
-    // Attach event listeners, model dropdown, send message, sidebar toggle, etc.
-    // (Full logic included in final answer.)
-  }
+    loadGoogleScript();
 
-  window.logout = () => { showAuth(); };
+    // ---------- CHAT UI INITIALIZATION ----------
+    function initChatUI() {
+      mainAppView.innerHTML = `
+        <aside class="sidebar" id="sidebar">
+          <div class="sidebar-content">
+            <div class="conv-header">
+              <h3>Conversations</h3>
+              <div class="new-chat-btn" id="newChatBtn"><i class="fas fa-plus"></i></div>
+            </div>
+            <div class="conversation-list" id="conversationList">
+              <div class="conv-item active"><i class="far fa-comment-dots"></i> Brand strategy Q2</div>
+              <div class="conv-item"><i class="far fa-comment"></i> Research synthesis</div>
+              <div class="conv-item"><i class="far fa-comment"></i> Design system notes</div>
+            </div>
+            <div class="user-panel">
+              <div class="avatar">${currentUser?.name?.charAt(0) || 'U'}</div>
+              <div class="user-info"><div class="user-name">${currentUser?.name || 'User'}</div></div>
+              <div class="user-settings" id="logoutBtn"><i class="fas fa-sign-out-alt"></i></div>
+            </div>
+          </div>
+        </aside>
+        <main class="main">
+          <div class="top-bar">
+            <div class="brand">Novaire AI</div>
+            <div class="menu-toggle" id="sidebarToggle"><i class="fas fa-chevron-left" id="toggleIcon"></i></div>
+          </div>
+          <div class="chat-messages" id="chatMessages">
+            <div class="message assistant"><div class="bubble">Welcome back, ${currentUser?.name || ''}. How may I assist you today?</div></div>
+          </div>
+          <div class="input-container">
+            <div class="input-wrapper">
+              <input type="text" id="messageInput" placeholder="Ask Novaire…" autocomplete="off">
+              <div class="send-btn" id="sendBtn"><i class="fas fa-arrow-up"></i></div>
+            </div>
+            <div class="model-selector" id="modelSelectorWrapper">
+              <div class="model-btn" id="modelBtn"><span id="currentModelLabel">Novaire Core</span><i class="fas fa-chevron-down"></i></div>
+              <div class="model-dropdown" id="modelDropdown"></div>
+            </div>
+          </div>
+        </main>
+      `;
+
+      // Sidebar toggle
+      const sidebar = document.getElementById('sidebar');
+      const toggleBtn = document.getElementById('sidebarToggle');
+      const toggleIcon = document.getElementById('toggleIcon');
+      toggleBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('collapsed');
+        toggleIcon.className = sidebar.classList.contains('collapsed') ? 'fas fa-chevron-right' : 'fas fa-chevron-left';
+      });
+
+      // Logout
+      document.getElementById('logoutBtn').addEventListener('click', () => { showAuth(); });
+
+      // Model dropdown
+      const modelBtn = document.getElementById('modelBtn');
+      const modelDropdown = document.getElementById('modelDropdown');
+      const currentModelLabel = document.getElementById('currentModelLabel');
+      
+      function renderModelDropdown() {
+        let html = '';
+        MODELS.forEach(model => {
+          const active = (currentModel.id === model.id) ? 'active-model' : '';
+          html += `<div class="model-option ${active}" data-model-id="${model.id}">${model.name}</div>`;
+        });
+        modelDropdown.innerHTML = html;
+        document.querySelectorAll('.model-option').forEach(opt => {
+          opt.addEventListener('click', () => {
+            const id = opt.dataset.modelId;
+            const selected = MODELS.find(m => m.id === id);
+            if (selected) {
+              currentModel = selected;
+              currentModelLabel.textContent = selected.name;
+              document.querySelectorAll('.model-option').forEach(o => o.classList.remove('active-model'));
+              opt.classList.add('active-model');
+              modelDropdown.classList.remove('show');
+            }
+          });
+        });
+      }
+      renderModelDropdown();
+
+      modelBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        modelDropdown.classList.toggle('show');
+      });
+      document.addEventListener('click', (e) => {
+        if (!modelSelectorWrapper.contains(e.target)) modelDropdown.classList.remove('show');
+      });
+      const modelSelectorWrapper = document.getElementById('modelSelectorWrapper');
+
+      // Chat functions
+      const chatMessages = document.getElementById('chatMessages');
+      const messageInput = document.getElementById('messageInput');
+      const sendBtn = document.getElementById('sendBtn');
+
+      function scrollToBottom() {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+
+      function addMessage(content, sender, isTemp = false, tempId = null) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message ${sender}`;
+        if (tempId) msgDiv.id = tempId;
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble';
+        bubble.textContent = content;
+        msgDiv.appendChild(bubble);
+        chatMessages.appendChild(msgDiv);
+        scrollToBottom();
+        return msgDiv;
+      }
+
+      async function sendMessage(message, model) {
+        // For now, use mock response (backend endpoint /chat can be used later)
+        return new Promise(resolve => {
+          setTimeout(() => {
+            if (model.id === 'core') resolve(`Novaire Core insight: "${message}" — Let's explore that further.`);
+            else if (model.id === 'code') resolve(`[Code analysis] I've processed your request. The structure appears sound.`);
+            else resolve(`Vision perspective: I see a balanced composition in your query.`);
+          }, 800);
+        });
+      }
+
+      async function handleSendMessage() {
+        const text = messageInput.value.trim();
+        if (!text) return;
+        addMessage(text, 'user');
+        messageInput.value = '';
+        const tempId = 'temp-' + Date.now();
+        addMessage('Thinking…', 'assistant', true, tempId);
+        try {
+          const response = await sendMessage(text, currentModel);
+          document.getElementById(tempId)?.remove();
+          addMessage(response, 'assistant');
+        } catch (err) {
+          document.getElementById(tempId)?.remove();
+          addMessage('An elegant error occurred. Please try again.', 'assistant');
+        }
+      }
+
+      sendBtn.addEventListener('click', handleSendMessage);
+      messageInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          handleSendMessage();
+        }
+      });
+
+      // Conversation list active states
+      document.querySelectorAll('.conv-item').forEach(item => {
+        item.addEventListener('click', function() {
+          document.querySelectorAll('.conv-item').forEach(c => c.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
+
+      document.getElementById('newChatBtn').addEventListener('click', () => {
+        const messages = chatMessages.querySelectorAll('.message');
+        for (let i = 1; i < messages.length; i++) messages[i].remove();
+        if (chatMessages.children.length === 0) {
+          addMessage(`Welcome back, ${currentUser?.name || ''}. How may I assist you today?`, 'assistant');
+        }
+      });
+
+      scrollToBottom();
+    }
+
+    // Expose logout globally if needed
+    window.logout = showAuth;
+  })();
 </script>
 </body>
 </html>
